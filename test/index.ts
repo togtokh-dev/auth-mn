@@ -2,8 +2,8 @@ import AUTH_MN, { config } from "../src";
 
 async function main() {
   // Configure authentication details
-  config.auth.username = "cXk2wYKkkq";
-  config.auth.password = "91u6h0O432Pqi7MKkdQrgE2A5OTqMY0nskUK3Yl5";
+  config.auth.username = "";
+  config.auth.password = "";
 
   try {
     // Generate an authentication token
