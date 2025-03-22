@@ -1,5 +1,6 @@
 import auth from "./auth";
 import notification from "./notification";
+import socket from "./socket";
 
 export const jsonToQueryString = (params: Record<string, any>): string => {
   const query = Object.entries(params)
@@ -73,6 +74,8 @@ export default {
   auth,
   ObjectId,
   notification,
+  socket,
 };
 
 export { default as notification } from "./notification";
+export { default as socket } from "./socket";
