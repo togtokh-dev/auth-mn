@@ -1,6 +1,7 @@
 import auth from "./auth";
 import notification from "./notification";
 import socket from "./socket";
+import find from "./find";
 
 export const jsonToQueryString = (params: Record<string, any>): string => {
   const query = Object.entries(params)
@@ -75,7 +76,9 @@ export default {
   ObjectId,
   notification,
   socket,
+  find,
 };
 
 export { default as notification } from "./notification";
 export { default as socket } from "./socket";
+export { default as find } from "./find";
