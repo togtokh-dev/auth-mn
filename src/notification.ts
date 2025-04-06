@@ -280,6 +280,7 @@ export const _3RD_TOKI_HIPAY = async (body: {
 export default {
   SinglePushNoti,
   SMS,
+  MAIL,
   _3RD: {
     TOKI: _3RD_TOKI_NOTI,
     HIPAY: _3RD_TOKI_HIPAY,
