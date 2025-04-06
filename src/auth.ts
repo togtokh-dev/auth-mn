@@ -18,7 +18,7 @@ const TOKEN = async (auth: {
     const response: ApiResponse<{}> = await axiosMasterMain(
       {
         method: "POST",
-        url: `${config.hosts.MAIN}/main/v1/auth//client/create`,
+        url: `${config.hosts.MAIN}/main/v1/auth/client/login`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -59,7 +59,7 @@ export const getToken = async (): Promise<string> => {
     const response: ApiResponse<{}> = await axiosMasterMain(
       {
         method: "POST",
-        url: `${config.hosts.MAIN}/main/v1/auth//client/create`,
+        url: `${config.hosts.MAIN}/main/v1/auth/client/login`,
         headers: {
           "Content-Type": "application/json",
         },
