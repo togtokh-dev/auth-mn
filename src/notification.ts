@@ -11,7 +11,7 @@ type ApiResponse<T> = {
 };
 type SinglePushNotiT = {
   user_id: number;
-  target_app: "AVDAR-STORE" | "AUTH-APP";
+  target_app: "AVDAR-STORE" | "AUTH-APP" | "E-SIM" | "SELLER-PANDA";
   body: {
     title: string;
     body: string;
