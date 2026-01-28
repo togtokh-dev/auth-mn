@@ -25,9 +25,9 @@ export const ShowToast = async (body: {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "socket toast",
@@ -37,10 +37,16 @@ export const ShowToast = async (body: {
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -54,7 +60,7 @@ export const ShowToast = async (body: {
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
@@ -86,9 +92,9 @@ export const ShowStatus = async (body: {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "socket status",
@@ -98,10 +104,16 @@ export const ShowStatus = async (body: {
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -115,7 +127,7 @@ export const ShowStatus = async (body: {
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
@@ -132,9 +144,9 @@ export const ShowOrderStatus = async (body: {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "socket order status",
@@ -144,10 +156,16 @@ export const ShowOrderStatus = async (body: {
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -161,7 +179,7 @@ export const ShowOrderStatus = async (body: {
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };

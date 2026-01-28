@@ -151,7 +151,7 @@ type CrmT = {
   updatedAt?: Date;
 };
 export const USER = async (
-  body: UserT,
+  body: UserT
 ): Promise<{ success: boolean; data: UserT[]; message: string }> => {
   try {
     const result: ApiResponse<null> = await axiosMasterMain(
@@ -162,9 +162,9 @@ export const USER = async (
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "support/find/user",
@@ -174,10 +174,16 @@ export const USER = async (
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -191,12 +197,12 @@ export const USER = async (
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
 export const MERCHANT = async (
-  body: MerchantT,
+  body: MerchantT
 ): Promise<{ success: boolean; data: MerchantT[]; message: string }> => {
   try {
     const result: ApiResponse<null> = await axiosMasterMain(
@@ -207,9 +213,9 @@ export const MERCHANT = async (
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "support/find/merchant",
@@ -219,10 +225,16 @@ export const MERCHANT = async (
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -236,12 +248,12 @@ export const MERCHANT = async (
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
 export const ADMIN = async (
-  body: AdminT,
+  body: AdminT
 ): Promise<{ success: boolean; data: AdminT[]; message: string }> => {
   try {
     const result: ApiResponse<null> = await axiosMasterMain(
@@ -252,9 +264,9 @@ export const ADMIN = async (
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "support/find/admin",
@@ -264,10 +276,16 @@ export const ADMIN = async (
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -281,12 +299,12 @@ export const ADMIN = async (
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
 export const CLIENT = async (
-  body: ClientT,
+  body: ClientT
 ): Promise<{ success: boolean; data: ClientT[]; message: string }> => {
   try {
     const result: ApiResponse<null> = await axiosMasterMain(
@@ -297,9 +315,9 @@ export const CLIENT = async (
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "support/find/client",
@@ -309,10 +327,16 @@ export const CLIENT = async (
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -326,12 +350,12 @@ export const CLIENT = async (
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
 export const CRM = async (
-  body: CrmT,
+  body: CrmT
 ): Promise<{ success: boolean; data: CrmT[]; message: string }> => {
   try {
     const result: ApiResponse<null> = await axiosMasterMain(
@@ -342,9 +366,9 @@ export const CRM = async (
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "support/find/crm",
@@ -354,10 +378,16 @@ export const CRM = async (
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -371,7 +401,7 @@ export const CRM = async (
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };

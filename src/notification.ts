@@ -44,7 +44,7 @@ type MailT = {
   };
 };
 export const SinglePushNoti = async (
-  body: SinglePushNotiT,
+  body: SinglePushNotiT
 ): Promise<{ success: boolean; data: null; message: string }> => {
   try {
     const result: ApiResponse<null> = await axiosMasterMain(
@@ -55,9 +55,9 @@ export const SinglePushNoti = async (
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "notification single-push",
@@ -67,10 +67,16 @@ export const SinglePushNoti = async (
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -84,7 +90,7 @@ export const SinglePushNoti = async (
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
@@ -102,9 +108,9 @@ export const SMS = async (body: {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "notification sms",
@@ -114,10 +120,16 @@ export const SMS = async (body: {
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -131,12 +143,12 @@ export const SMS = async (body: {
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
 export const MAIL = async (
-  body: MailT,
+  body: MailT
 ): Promise<{ success: boolean; data: null; message: string }> => {
   try {
     const result: ApiResponse<null> = await axiosMasterMain(
@@ -147,9 +159,9 @@ export const MAIL = async (
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "notification mail",
@@ -159,10 +171,16 @@ export const MAIL = async (
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -176,7 +194,7 @@ export const MAIL = async (
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
@@ -198,9 +216,9 @@ export const _3RD_TOKI_NOTI = async (body: {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "notification 3rd toki",
@@ -210,10 +228,16 @@ export const _3RD_TOKI_NOTI = async (body: {
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -227,7 +251,7 @@ export const _3RD_TOKI_NOTI = async (body: {
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
@@ -244,9 +268,9 @@ export const _3RD_TOKI_HIPAY = async (body: {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`,
+          Authorization: `Bearer ${config.token}`
         },
-        data: body,
+        data: body
       },
       {
         name: "notification 3rd hipay",
@@ -256,10 +280,16 @@ export const _3RD_TOKI_HIPAY = async (body: {
         shouldRetryStatus: [401, 400],
         logger(data) {
           if (config.logger) {
-            console.log(data.json);
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
           }
-        },
-      },
+        }
+      }
     );
 
     return { success: true, data: result.data, message: result.message };
@@ -273,7 +303,7 @@ export const _3RD_TOKI_HIPAY = async (body: {
     return {
       success: false,
       data: null,
-      message: axiosError.data?.message || "",
+      message: axiosError.data?.message || ""
     };
   }
 };
@@ -283,6 +313,6 @@ export default {
   MAIL,
   _3RD: {
     TOKI: _3RD_TOKI_NOTI,
-    HIPAY: _3RD_TOKI_HIPAY,
-  },
+    HIPAY: _3RD_TOKI_HIPAY
+  }
 };

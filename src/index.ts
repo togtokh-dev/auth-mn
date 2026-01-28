@@ -7,7 +7,7 @@ export const jsonToQueryString = (params: Record<string, any>): string => {
   const query = Object.entries(params)
     .map(
       ([key, value]) =>
-        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
     )
     .join("&");
 
@@ -43,26 +43,26 @@ export const config: Config = {
   env: "staging",
   hosts: {
     MAIN: "https://staging-api.auth.mn",
-    WALLET: "https://staging-api.auth.mn",
+    WALLET: "https://staging-api.auth.mn"
   },
   auth: {
     username: "",
-    password: "",
+    password: ""
   },
-  logger: false,
+  logger: false
 };
 
 // Function to set the host URLs for API requests
 export const setHost = (
   { MAIN, WALLET }: { MAIN: string; WALLET: string },
-  ENV: "staging" | "prod",
+  ENV: "staging" | "prod"
 ) => {
   config.hosts.MAIN = MAIN;
   config.hosts.WALLET = WALLET;
   config.env = ENV;
 
-  console.log("Hosts set to:", config.hosts);
-  console.log("Environment set to:", ENV);
+  console.log("Auth.mn Hosts set to:", config.hosts);
+  console.log("Auth.mn Environment set to:", ENV);
 };
 
 // Function to enable or disable logging
@@ -76,7 +76,7 @@ export default {
   ObjectId,
   notification,
   socket,
-  find,
+  find
 };
 
 export { default as notification } from "./notification";

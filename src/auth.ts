@@ -20,21 +20,29 @@ const TOKEN = async (auth: {
         method: "POST",
         url: `${config.hosts.MAIN}/main/v1/auth/client/login`,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
 
         data: {
           email: auth.username,
-          password: auth.password,
-        },
+          password: auth.password
+        }
       },
       {
-        name: "Token",
+        name: "Auth.mn Token",
         timeout: 20000,
         logger: (data) => {
-          if (config.logger) console.log(data);
-        },
-      },
+          if (config.logger) {
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
+          }
+        }
+      }
     );
 
     if (response?.token) {
@@ -61,21 +69,29 @@ export const getToken = async (): Promise<string> => {
         method: "POST",
         url: `${config.hosts.MAIN}/main/v1/auth/client/login`,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
 
         data: {
           email: config.auth.username,
-          password: config.auth.password,
-        },
+          password: config.auth.password
+        }
       },
       {
-        name: "Token",
+        name: "Auth.mn Token",
         timeout: 20000,
         logger: (data) => {
-          if (config.logger) console.log(data);
-        },
-      },
+          if (config.logger) {
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
+          }
+        }
+      }
     );
 
     if (response?.token) {
