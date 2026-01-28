@@ -1,6 +1,6 @@
 import { config } from ".";
 import { getToken } from "./auth";
-import { axiosMasterMain } from "axios-master";
+import { axiosMasterLogger } from "axios-master";
 import { AxiosResponse } from "axios";
 type ApiResponse<T> = {
   code: string;
@@ -47,7 +47,7 @@ export const SinglePushNoti = async (
   body: SinglePushNotiT
 ): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -100,7 +100,7 @@ export const SMS = async (body: {
   from: string;
 }): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -151,7 +151,7 @@ export const MAIL = async (
   body: MailT
 ): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -208,7 +208,7 @@ export const _3RD_TOKI_NOTI = async (body: {
   icon: string;
 }): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -260,7 +260,7 @@ export const _3RD_TOKI_HIPAY = async (body: {
   message: string;
 }): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,

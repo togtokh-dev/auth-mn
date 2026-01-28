@@ -40,7 +40,7 @@ async function main() {
     console.error("Error during TOKEN generation or payment:", error);
   }
   try {
-    const user = await find.USER({ user_id: 6246839 });
+    const user = await find.USER({ user_id: 5742248 });
     console.log("user", user);
   } catch (error) {}
 }

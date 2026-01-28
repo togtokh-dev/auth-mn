@@ -1,6 +1,6 @@
 import { config } from ".";
 import { getToken } from "./auth";
-import { axiosMasterMain } from "axios-master";
+import { axiosMasterLogger } from "axios-master";
 import { AxiosResponse } from "axios";
 
 type ApiResponse<T> = {
@@ -17,7 +17,7 @@ export const ShowToast = async (body: {
   text: string;
 }): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -85,7 +85,7 @@ export const ShowStatus = async (body: {
   start_date?: Date;
 }): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         url: `${config.hosts.MAIN}/main/v1/socket/notification/status`,
@@ -137,7 +137,7 @@ export const ShowOrderStatus = async (body: {
   order_id: string;
 }): Promise<{ success: boolean; data: null; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         url: `${config.hosts.MAIN}/main/v1/socket/notification/order/status`,

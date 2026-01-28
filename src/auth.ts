@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { config } from "./";
-import { axiosMasterMain } from "axios-master";
+import { axiosMasterLogger } from "axios-master";
 
 type ApiResponse<T> = {
   code: string;
@@ -15,7 +15,7 @@ const TOKEN = async (auth: {
   password: string;
 }): Promise<string> => {
   try {
-    const response: ApiResponse<{}> = await axiosMasterMain(
+    const response: ApiResponse<{}> = await axiosMasterLogger(
       {
         method: "POST",
         url: `${config.hosts.MAIN}/main/v1/auth/client/login`,
@@ -64,7 +64,7 @@ const TOKEN = async (auth: {
 
 export const getToken = async (): Promise<string> => {
   try {
-    const response: ApiResponse<{}> = await axiosMasterMain(
+    const response: ApiResponse<{}> = await axiosMasterLogger(
       {
         method: "POST",
         url: `${config.hosts.MAIN}/main/v1/auth/client/login`,

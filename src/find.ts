@@ -1,6 +1,6 @@
 import { config } from ".";
 import { getToken } from "./auth";
-import { axiosMasterMain } from "axios-master";
+import { axiosMasterLogger } from "axios-master";
 import { AxiosResponse } from "axios";
 
 type ApiResponse<T> = {
@@ -154,7 +154,7 @@ export const USER = async (
   body: UserT
 ): Promise<{ success: boolean; data: UserT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -205,7 +205,7 @@ export const MERCHANT = async (
   body: MerchantT
 ): Promise<{ success: boolean; data: MerchantT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -256,7 +256,7 @@ export const ADMIN = async (
   body: AdminT
 ): Promise<{ success: boolean; data: AdminT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -307,7 +307,7 @@ export const CLIENT = async (
   body: ClientT
 ): Promise<{ success: boolean; data: ClientT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -358,7 +358,7 @@ export const CRM = async (
   body: CrmT
 ): Promise<{ success: boolean; data: CrmT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterMain(
+    const result: ApiResponse<null> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
