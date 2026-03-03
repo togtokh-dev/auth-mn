@@ -183,5 +183,58 @@ export const ShowOrderStatus = async (body: {
     };
   }
 };
+export const EMIT = async (
+  body: {
+    user_id: number;
+    emit_name: string;
+    data: any;
+  }[]
+): Promise<{ success: boolean; data: null; message: string }> => {
+  try {
+    const result: ApiResponse<null> = await axiosMasterLogger(
+      {
+        method: "POST",
+        url: `${config.hosts.MAIN}/main/v1/socket/emit`,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${config.token}`
+        },
+        data: body
+      },
+      {
+        name: "socket emit",
+        timeout: 20000,
+        retryFunction: getToken,
+        shouldRetry: true,
+        shouldRetryStatus: [401, 400],
+        logger(data) {
+          if (config.logger) {
+            console.log({
+              time: data.json.time,
+              request: data.json.request,
+              response: `${data.json.response}`,
+              responseBody: data.json.responseBody,
+              statusCode: data.json.statusCode
+            });
+          }
+        }
+      }
+    );
 
-export default { ShowToast, ShowStatus, ShowOrderStatus };
+    return { success: true, data: result.data, message: result.message };
+  } catch (error) {
+    const axiosError = error as AxiosResponse<ApiResponse<{}>>;
+    if (axiosError.data) {
+      console.log(axiosError.data);
+    } else {
+      console.error("Request Failed:", axiosError);
+    }
+    return {
+      success: false,
+      data: null,
+      message: axiosError.data?.message || ""
+    };
+  }
+};
+export default { ShowToast, ShowStatus, ShowOrderStatus, EMIT };

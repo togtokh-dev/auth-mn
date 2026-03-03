@@ -2,7 +2,118 @@ import { config } from ".";
 import { getToken } from "./auth";
 import { axiosMasterLogger } from "axios-master";
 import { AxiosResponse } from "axios";
+/* -----------------------------
+ * Enums
+ * ----------------------------- */
 
+export const genders = ["MEN", "WOMEN"] as const;
+export type Gender = (typeof genders)[number];
+
+/* -----------------------------
+ * Types
+ * ----------------------------- */
+
+export interface UserEmailItem {
+  email: string;
+  verified: boolean;
+  primary: boolean;
+}
+
+export interface UserPhoneItem {
+  number: string;
+  verified: boolean;
+  primary: boolean;
+}
+
+export interface UserAuthProfiles {
+  facebook_id?: string | null;
+  google_id?: string | null;
+  steam_id?: string | null;
+  apple_id?: string | null;
+  twitter_id?: string | null;
+  monpay_id?: string | null;
+  toki_id?: string | null;
+  social_id?: string | null;
+  hipay_id?: string | null;
+  digi_id?: string | null;
+}
+
+export interface UserPreferences {
+  language: string;
+  notifications: boolean;
+}
+
+export interface UserStatus {
+  is_active: boolean;
+  is_banned: boolean;
+  verified: boolean;
+}
+
+export interface UserSecurity {
+  password_hash: string;
+  two_factor_enabled: boolean;
+  last_password_change: Date | null;
+}
+
+export interface UserVerifyInfo {
+  first_name: string;
+  last_name: string;
+  born_date: Date | null;
+  national_id: string;
+}
+
+export interface UserAppItem {
+  app_name: string;
+  app_id: string;
+  device_id: string;
+}
+
+export interface UserWalletItem {
+  key_id: string;
+  wallet_id: string;
+  wallet_key: string;
+  wallet_type: string;
+  wallet_name: string;
+  role: string[];
+}
+
+type UserT = {
+  user_id: number;
+  user_name: string;
+  nick_name: string;
+  exp: number;
+
+  primary_email?: string | null;
+  primary_phone?: string | null;
+
+  emails: UserEmailItem[];
+  phone_numbers: UserPhoneItem[];
+
+  auth_profiles: UserAuthProfiles;
+
+  profile_image_url: string;
+  date_of_birth: Date | null;
+  gender?: Gender;
+
+  sign_up_date: Date | null;
+  last_login: Date | null;
+
+  wallets: UserWalletItem[];
+
+  preferences: UserPreferences;
+  status: UserStatus;
+  security: UserSecurity;
+
+  verify_info: UserVerifyInfo;
+
+  dynamic_info: Record<string, any>;
+  apps: UserAppItem[];
+
+  // STANDARD
+  search_string?: string;
+  delFlg?: boolean;
+  order_index?: number;
+};
 type ApiResponse<T> = {
   code: string;
   success: boolean;
@@ -10,74 +121,7 @@ type ApiResponse<T> = {
   token?: string;
   data: T;
 };
-type UserT = {
-  _id?: string; // Mongoose default `_id` type
-  user_id?: number; // Numerical identifier for the user
-  user_name?: string; // User's unique username
-  nick_name?: string; // User's nickname
-  exp?: number; // Experience points or similar metric for the user
-  primary_email?: string; // Primary email for login and communication
-  primary_phone?: string; // Primary phone for login and communication
-  emails?: Array<{
-    email: string;
-    verified: boolean;
-    primary: boolean;
-  }>;
-  phone_numbers?: Array<{
-    number: string;
-    verified: boolean;
-    primary: boolean;
-  }>;
-  auth_profiles?: {
-    facebook_id?: string;
-    google_id?: string;
-    steam_id?: string;
-    apple_id?: string;
-    twitter_id?: string;
-    monpay_id?: string;
-    toki_id?: string;
-    social_id?: string;
-    hipay_id?: string;
-    digi_id?: string;
-  };
-  profile_image_url?: string; // URL to the user's avatar
-  date_of_birth?: Date; // User's date of birth
-  gender?: "MEN" | "WOMEN"; // User's gender
-  sign_up_date?: Date; // Date when the user created their account
-  last_login?: Date; // Last login date
-  wallet_id?: string; // Identifier for the user's wallet
-  wallet_key?: string; // Security key for the user's wallet
-  preferences?: {
-    language?: string;
-    notifications?: boolean;
-  };
-  status?: {
-    is_active?: boolean;
-    is_banned?: boolean;
-    verified?: boolean;
-  };
-  security?: {
-    password_hash?: string;
-    two_factor_enabled?: boolean;
-    last_password_change?: Date;
-  };
-  verify_info?: {
-    first_name?: string;
-    last_name?: string;
-    born_date?: Date;
-    national_id?: string;
-  };
-  dynamic_info?: {
-    [key: string]: any;
-  };
-  apps?: {
-    app_name: string;
-    app_id: string;
-    device_id: string;
-  }[];
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+
 type MerchantT = {
   _id?: string;
   user_id: number;
@@ -154,7 +198,7 @@ export const USER = async (
   body: UserT
 ): Promise<{ success: boolean; data: UserT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
+    const result: ApiResponse<[]> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -196,7 +240,7 @@ export const USER = async (
     }
     return {
       success: false,
-      data: null,
+      data: [],
       message: axiosError.data?.message || ""
     };
   }
@@ -205,7 +249,7 @@ export const MERCHANT = async (
   body: MerchantT
 ): Promise<{ success: boolean; data: MerchantT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
+    const result: ApiResponse<[]> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -247,7 +291,7 @@ export const MERCHANT = async (
     }
     return {
       success: false,
-      data: null,
+      data: [],
       message: axiosError.data?.message || ""
     };
   }
@@ -256,7 +300,7 @@ export const ADMIN = async (
   body: AdminT
 ): Promise<{ success: boolean; data: AdminT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
+    const result: ApiResponse<[]> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -298,7 +342,7 @@ export const ADMIN = async (
     }
     return {
       success: false,
-      data: null,
+      data: [],
       message: axiosError.data?.message || ""
     };
   }
@@ -307,7 +351,7 @@ export const CLIENT = async (
   body: ClientT
 ): Promise<{ success: boolean; data: ClientT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
+    const result: ApiResponse<[]> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -349,7 +393,7 @@ export const CLIENT = async (
     }
     return {
       success: false,
-      data: null,
+      data: [],
       message: axiosError.data?.message || ""
     };
   }
@@ -358,7 +402,7 @@ export const CRM = async (
   body: CrmT
 ): Promise<{ success: boolean; data: CrmT[]; message: string }> => {
   try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
+    const result: ApiResponse<[]> = await axiosMasterLogger(
       {
         method: "POST",
         maxBodyLength: Infinity,
@@ -400,7 +444,7 @@ export const CRM = async (
     }
     return {
       success: false,
-      data: null,
+      data: [],
       message: axiosError.data?.message || ""
     };
   }
