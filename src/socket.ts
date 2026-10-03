@@ -1,240 +1,31 @@
-import { config } from ".";
-import { getToken } from "./auth";
-import { axiosMasterLogger } from "axios-master";
-import { AxiosResponse } from "axios";
+import { request } from "./request";
+import { EmitT, OrderStatusT, Result, StatusT, ToastT } from "./types";
 
-type ApiResponse<T> = {
-  code: string;
-  success: boolean;
-  message: string;
-  token?: string;
-  data: T;
-};
+/** Хэрэглэгчийн нээлттэй апп дээр toast — permission: socket.toast */
+export const toast = (body: ToastT): Promise<Result<null>> =>
+  request<null>({ method: "POST", path: "/main/v1/socket/notification/toast", name: "socket toast", data: body });
 
-export const ShowToast = async (body: {
-  user_id: number;
-  type: "info" | "warning";
-  text: string;
-}): Promise<{ success: boolean; data: null; message: string }> => {
-  try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
-      {
-        method: "POST",
-        maxBodyLength: Infinity,
-        url: `${config.hosts.MAIN}/main/v1/socket/notification/toast`,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`
-        },
-        data: body
-      },
-      {
-        name: "socket toast",
-        timeout: 20000,
-        retryFunction: getToken,
-        shouldRetry: true,
-        shouldRetryStatus: [401, 400],
-        logger(data) {
-          if (config.logger) {
-            console.log({
-              time: data.json.time,
-              request: data.json.request,
-              response: `${data.json.response}`,
-              responseBody: data.json.responseBody,
-              statusCode: data.json.statusCode
-            });
-          }
-        }
-      }
-    );
+/** Төлөвийн карт (Loading / Success / Failure) — permission: socket.status */
+export const status = (body: StatusT): Promise<Result<null>> =>
+  request<null>({ method: "POST", path: "/main/v1/socket/notification/status", name: "socket status", data: body });
 
-    return { success: true, data: result.data, message: result.message };
-  } catch (error) {
-    const axiosError = error as AxiosResponse<ApiResponse<{}>>;
-    if (axiosError.data) {
-      console.log(axiosError.data);
-    } else {
-      console.error("Request Failed:", axiosError);
-    }
-    return {
-      success: false,
-      data: null,
-      message: axiosError.data?.message || ""
-    };
-  }
-};
+/** Захиалгын төлөв шинэчлэгдсэн event — permission: socket.status */
+export const orderStatus = (body: OrderStatusT): Promise<Result<null>> =>
+  request<null>({
+    method: "POST",
+    path: "/main/v1/socket/notification/order/status",
+    name: "socket order status",
+    data: body
+  });
 
-export const ShowStatus = async (body: {
-  user_id: number;
-  id: string;
-  type?: "Loading" | "Success" | "Failure";
-  title?: string;
-  amount?: number | string;
-  desc?: string;
-  footer?: {
-    text: string;
-    buttons: {
-      text: string;
-      fun: "href" | "close" | "exit";
-      href?: string | null;
-    }[];
-  };
-  show?: boolean;
-  expired_date?: Date;
-  start_date?: Date;
-}): Promise<{ success: boolean; data: null; message: string }> => {
-  try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
-      {
-        method: "POST",
-        url: `${config.hosts.MAIN}/main/v1/socket/notification/status`,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`
-        },
-        data: body
-      },
-      {
-        name: "socket status",
-        timeout: 20000,
-        retryFunction: getToken,
-        shouldRetry: true,
-        shouldRetryStatus: [401, 400],
-        logger(data) {
-          if (config.logger) {
-            console.log({
-              time: data.json.time,
-              request: data.json.request,
-              response: `${data.json.response}`,
-              responseBody: data.json.responseBody,
-              statusCode: data.json.statusCode
-            });
-          }
-        }
-      }
-    );
+/** Дурын event олон хэрэглэгч рүү — permission: socket.emit */
+export const emit = (body: EmitT[]): Promise<Result<null>> =>
+  request<null>({ method: "POST", path: "/main/v1/socket/emit", name: "socket emit", data: body });
 
-    return { success: true, data: result.data, message: result.message };
-  } catch (error) {
-    const axiosError = error as AxiosResponse<ApiResponse<{}>>;
-    if (axiosError.data) {
-      console.log(axiosError.data);
-    } else {
-      console.error("Request Failed:", axiosError);
-    }
-    return {
-      success: false,
-      data: null,
-      message: axiosError.data?.message || ""
-    };
-  }
-};
+// Хуучин нэрүүд (0.x)
+export const ShowToast = toast;
+export const ShowStatus = status;
+export const ShowOrderStatus = orderStatus;
+export const EMIT = emit;
 
-export const ShowOrderStatus = async (body: {
-  user_id: number;
-  order_id: string;
-}): Promise<{ success: boolean; data: null; message: string }> => {
-  try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
-      {
-        method: "POST",
-        url: `${config.hosts.MAIN}/main/v1/socket/notification/order/status`,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`
-        },
-        data: body
-      },
-      {
-        name: "socket order status",
-        timeout: 20000,
-        retryFunction: getToken,
-        shouldRetry: true,
-        shouldRetryStatus: [401, 400],
-        logger(data) {
-          if (config.logger) {
-            console.log({
-              time: data.json.time,
-              request: data.json.request,
-              response: `${data.json.response}`,
-              responseBody: data.json.responseBody,
-              statusCode: data.json.statusCode
-            });
-          }
-        }
-      }
-    );
-
-    return { success: true, data: result.data, message: result.message };
-  } catch (error) {
-    const axiosError = error as AxiosResponse<ApiResponse<{}>>;
-    if (axiosError.data) {
-      console.log(axiosError.data);
-    } else {
-      console.error("Request Failed:", axiosError);
-    }
-    return {
-      success: false,
-      data: null,
-      message: axiosError.data?.message || ""
-    };
-  }
-};
-export const EMIT = async (
-  body: {
-    user_id: number;
-    emit_name: string;
-    data: any;
-  }[]
-): Promise<{ success: boolean; data: null; message: string }> => {
-  try {
-    const result: ApiResponse<null> = await axiosMasterLogger(
-      {
-        method: "POST",
-        url: `${config.hosts.MAIN}/main/v1/socket/emit`,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${config.token}`
-        },
-        data: body
-      },
-      {
-        name: "socket emit",
-        timeout: 20000,
-        retryFunction: getToken,
-        shouldRetry: true,
-        shouldRetryStatus: [401, 400],
-        logger(data) {
-          if (config.logger) {
-            console.log({
-              time: data.json.time,
-              request: data.json.request,
-              response: `${data.json.response}`,
-              responseBody: data.json.responseBody,
-              statusCode: data.json.statusCode
-            });
-          }
-        }
-      }
-    );
-
-    return { success: true, data: result.data, message: result.message };
-  } catch (error) {
-    const axiosError = error as AxiosResponse<ApiResponse<{}>>;
-    if (axiosError.data) {
-      console.log(axiosError.data);
-    } else {
-      console.error("Request Failed:", axiosError);
-    }
-    return {
-      success: false,
-      data: null,
-      message: axiosError.data?.message || ""
-    };
-  }
-};
-export default { ShowToast, ShowStatus, ShowOrderStatus, EMIT };
+export default { toast, status, orderStatus, emit, ShowToast, ShowStatus, ShowOrderStatus, EMIT };

@@ -1,49 +1,25 @@
-import AUTH_MN, {
-  config,
-  find,
-  setHost as AuthMnSetHost,
-  config as AuthConfig
-} from "../src";
+// Ажиллуулах:
+//   AUTH_MN_CLIENT_ID=cl_xxx AUTH_MN_CLIENT_SECRET=sk_xxx npx ts-node test/index.ts
+import authMn, { setAuth, setHost, setLogger, authState } from "../src";
 
 async function main() {
-  if (true) {
-    AuthMnSetHost(
-      {
-        MAIN: "https://api.auth.mn",
-        WALLET: "https://api.auth.mn"
-      },
-      "prod"
-    );
-  } else {
-    AuthMnSetHost(
-      {
-        MAIN: "https://staging-api.auth.mn",
-        WALLET: "https://staging-api.auth.mn"
-      },
-      "staging"
-    );
-  }
+  setHost((process.env.AUTH_MN_ENV as "prod" | "staging") || "staging");
+  setLogger(true);
+  setAuth({
+    client_id: process.env.AUTH_MN_CLIENT_ID || "",
+    client_secret: process.env.AUTH_MN_CLIENT_SECRET || ""
+  });
 
-  // Configure authentication details
-  AuthConfig.auth.username = "info@seller.mn";
-  AuthConfig.auth.password = "@9{4p.]g4t3>b})(Xd~5ZtuR76Iq]";
+  const me = await authMn.auth.me();
+  console.log("me:", me);
+  console.log("permissions:", authState.permissions);
 
-  try {
-    // Generate an authentication token
-    const tokenResponse = await AUTH_MN.auth.TOKEN({
-      username: config.auth.username,
-      password: config.auth.password
-    });
+  const user = await authMn.user.find({ user_id: Number(process.env.AUTH_MN_TEST_USER_ID || 0) });
+  console.log("user:", user.success, user.message, user.data?.user_name);
 
-    console.log("Token response:", tokenResponse);
-  } catch (error) {
-    console.error("Error during TOKEN generation or payment:", error);
-  }
-  try {
-    const user = await find.USER({ user_id: 5742248 });
-    console.log("user", user);
-  } catch (error) {}
+  // refresh урсгал
+  const r = await authMn.auth.refresh();
+  console.log("refresh:", r.success, r.message);
 }
 
-// Execute the main function
 main();
