@@ -21,6 +21,8 @@ import socket from "./socket";
 export type Env = "prod" | "staging";
 
 export type Config = {
+  /** Одоогийн client access token (сан автоматаар шинэчилнэ; гараар Authorization header үүсгэхэд ашиглаж болно) */
+  token: string;
   env: Env;
   hosts: { MAIN: string; WALLET: string };
   auth: { client_id: string; client_secret: string };
@@ -35,6 +37,7 @@ const HOSTS: Record<Env, { MAIN: string; WALLET: string }> = {
 };
 
 export const config: Config = {
+  token: "",
   env: "prod",
   hosts: { ...HOSTS.prod },
   auth: { client_id: "", client_secret: "" },

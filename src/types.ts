@@ -144,6 +144,37 @@ export type UserT = {
 };
 
 /* -----------------------------
+ * User list
+ * ----------------------------- */
+export type UserListFilter = {
+  /** user_id жагсаалт (max 1000) */
+  user_ids?: (number | string)[];
+  /** Таны апп-д бүртгүүлсэн хэрэглэгчид (apps.app_name) */
+  app_name?: string;
+  phone_number?: string;
+  email?: string;
+  /** нэр (хэсэгчилсэн) */
+  name?: string;
+  /** нэр / nick / имэйл / утас дээр ерөнхий хайлт */
+  q?: string;
+  gender?: Gender;
+  /** энэ хугацаанаас хойш нэвтэрсэн (ISO) */
+  last_login_after?: string | Date;
+  page?: number;
+  /** max 500, default 100 */
+  limit?: number;
+  /** lite: зөвхөн user_id, нэр, утас, имэйл, зураг, last_login (хурдан) */
+  fields?: "full" | "lite";
+};
+
+export type UserLite = Pick<
+  UserT,
+  "user_id" | "user_name" | "nick_name" | "primary_phone" | "primary_email" | "profile_image_url" | "last_login"
+>;
+
+export type PageResult<T> = { list: T[]; total: number; page: number; limit: number };
+
+/* -----------------------------
  * Notification
  * ----------------------------- */
 export type PushNotiT = {

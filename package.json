@@ -1,6 +1,6 @@
 {
   "name": "auth-mn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Auth.mn API client for Node.js — client_id/secret token, user, notification, socket",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

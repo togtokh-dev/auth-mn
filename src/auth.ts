@@ -29,6 +29,7 @@ export class AuthState {
 
   apply(d: TokenData) {
     this.accessToken = d.access_token;
+    config.token = d.access_token;
     this.refreshToken = d.refresh_token;
     this.accessExpiresAt = Date.now() + d.expires_in * 1000;
     this.refreshExpiresAt = Date.now() + d.refresh_expires_in * 1000;
@@ -38,6 +39,7 @@ export class AuthState {
 
   clear() {
     this.accessToken = "";
+    config.token = "";
     this.refreshToken = "";
     this.accessExpiresAt = 0;
     this.refreshExpiresAt = 0;
@@ -106,6 +108,9 @@ export const getToken = (): Promise<string> =>
     return l.success ? authState.accessToken : "";
   });
 
+/** Одоогийн access token (хоосон бол авч амжаагүй) — config.token-той ижил */
+export const token = (): string => config.token;
+
 /** Одоогийн refresh token-ийг серверт хүчингүй болгоод cache цэвэрлэнэ */
 export const revoke = async (): Promise<Result<null>> => {
   const rt = authState.refreshToken;
@@ -144,4 +149,4 @@ export const TOKEN = async (_legacy?: { username: string; password: string }): P
   return getToken();
 };
 
-export default { getToken, login, refresh, revoke, me, permissions, hasPermission, TOKEN, state: authState };
+export default { getToken, token, login, refresh, revoke, me, permissions, hasPermission, TOKEN, state: authState };

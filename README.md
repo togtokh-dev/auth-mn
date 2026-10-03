@@ -10,7 +10,8 @@
 | Та юу хийх вэ | Сангийн функц | Шаардлагатай эрх |
 |---|---|---|
 | Frontend-ээс ирсэн хэрэглэгчийн token шалгаж мэдээллийг авах | `user.verify(token)` / `user.middleware()` | `user.verify` |
-| user_id / утас / имэйлээр хэрэглэгч хайх | `user.find({...})` | `user.read` |
+| user_id / утас / имэйлээр нэг хэрэглэгч авах | `user.find({...})` | `user.read` |
+| Олон хэрэглэгч (өөрийн апп-ийн хэрэглэгчид, ID жагсаалт, хайлт) | `user.list({...})` / `user.listAll({...})` | `user.read` |
 | Push мэдэгдэл, SMS, имэйл илгээх | `notification.push / sms / mail` | `notification.*` |
 | Хэрэглэгчийн нээлттэй апп дээр realtime toast / төлөв харуулах | `socket.toast / status / orderStatus / emit` | `socket.*` |
 
@@ -115,6 +116,20 @@ const r = await authMn.user.find({ user_id: 5742248 });   // эсвэл { phone_
 if (r.success) console.log(r.data.user_name);
 ```
 
+### 3.4 Олон хэрэглэгч (жагсаалт)
+
+```ts
+// Таны апп-д бүртгүүлсэн бүх хэрэглэгч — campaign, push илгээхэд
+const r = await authMn.user.list({ app_name: "CHARGEX", fields: "lite", page: 1, limit: 500 });
+// r.data = { list: UserLite[], total, page, limit }
+
+const all = await authMn.user.listAll({ app_name: "CHARGEX", fields: "lite" }); // бүх хуудсыг нэгтгэнэ
+await authMn.user.list({ user_ids: [5742248, 5742249] });
+await authMn.user.list({ q: "9911", last_login_after: "2026-01-01" });
+```
+
+Шүүлтүүр: `user_ids | app_name | phone_number | email | name | q | gender | last_login_after | page | limit (≤500) | fields ("full" | "lite")`.
+
 ### UserT
 
 ```ts
@@ -164,6 +179,10 @@ await authMn.socket.emit([{ user_id, emit_name: "my-event", data: { any: 1 } }])
 ## 6. Client өөрийн мэдээлэл
 
 ```ts
+import { config } from "auth-mn";
+await authMn.auth.getToken();   // хүчинтэй access token (шаардлагатай бол refresh / login хийгээд)
+config.token;                   // одоогийн access token — гараар Authorization: Bearer үүсгэхэд
+
 await authMn.auth.me();                      // { client_id, name, permissions, ... }
 authMn.auth.hasPermission("notification.sms"); // сүүлийн token-оос
 await authMn.auth.permissions();             // Auth.mn-ийн бүх боломжит эрх

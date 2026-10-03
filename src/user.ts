@@ -1,5 +1,5 @@
 import { request } from "./request";
-import { Result, UserT, VerifiedUser } from "./types";
+import { PageResult, Result, UserListFilter, UserLite, UserT, VerifiedUser } from "./types";
 
 /**
  * Хэрэглэгчийн token-ийг Auth.mn сервер дээр баталгаажуулж, хэрэглэгчийн
@@ -28,6 +28,42 @@ export const find = (query: {
   email?: string;
 }): Promise<Result<UserT>> =>
   request<UserT>({ method: "POST", path: "/main/v1/auth/client/user/find", name: "user find", data: query });
+
+/**
+ * Олон хэрэглэгч — хуудаслалттай. Permission: user.read
+ *   await authMn.user.list({ app_name: "CHARGEX", fields: "lite", limit: 500 });
+ *   → { list, total, page, limit }
+ */
+export function list(filter: UserListFilter & { fields: "lite" }): Promise<Result<PageResult<UserLite>>>;
+export function list(filter?: UserListFilter): Promise<Result<PageResult<UserT>>>;
+export function list(filter: UserListFilter = {}): Promise<Result<PageResult<any>>> {
+  return request<PageResult<any>>({
+    method: "POST",
+    path: "/main/v1/auth/client/user/list",
+    name: "user list",
+    data: filter
+  });
+}
+
+/**
+ * Бүх хуудсыг татаж нэг массив болгоно (campaign, тайлан г.м.). max нь хамгаалалт (default 50000).
+ *   const users = await authMn.user.listAll({ app_name: "CHARGEX", fields: "lite" });
+ */
+export async function listAll(filter: UserListFilter & { fields: "lite" }, max?: number): Promise<Result<UserLite[]>>;
+export async function listAll(filter?: UserListFilter, max?: number): Promise<Result<UserT[]>>;
+export async function listAll(filter: UserListFilter = {}, max = 50000): Promise<Result<any[]>> {
+  const limit = Math.min(500, filter.limit || 500);
+  const all: any[] = [];
+  let page = 1;
+  for (;;) {
+    const r = await list({ ...filter, page, limit });
+    if (!r.success || !r.data) return { success: false, message: r.message, data: null, status: r.status };
+    all.push(...r.data.list);
+    if (all.length >= r.data.total || r.data.list.length < limit || all.length >= max) break;
+    page++;
+  }
+  return { success: true, message: "Амжилттай", data: all, status: 200 };
+}
 
 /* -----------------------------
  * Express / Koa / Fastify-д зориулсан middleware
@@ -85,4 +121,4 @@ export const middleware =
     return next();
   };
 
-export default { verify, find, middleware };
+export default { verify, find, list, listAll, middleware };
