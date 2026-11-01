@@ -10,13 +10,14 @@
  * Client-д олгосон permission-ээс гадуур API дуудвал 403 + message буцна.
  *
  * Хамрах хүрээ: хэрэглэгч (verify / find), мэдэгдэл (push / sms / mail),
- * socket (toast / status / orderStatus / emit). Merchant/admin зэрэг дотоод
- * бүртгэлүүд энэ санд байхгүй.
+ * socket (toast / status / orderStatus / emit), exp (хэрэглэгчид exp нэмэх —
+ * тусдаа EXP түлхүүр, setExpKey). Merchant/admin зэрэг дотоод бүртгэлүүд энэ санд байхгүй.
  */
 import auth from "./auth";
 import user from "./user";
 import notification from "./notification";
 import socket from "./socket";
+import exp from "./exp";
 
 export type Env = "prod" | "staging";
 
@@ -26,6 +27,8 @@ export type Config = {
   env: Env;
   hosts: { MAIN: string; WALLET: string };
   auth: { client_id: string; client_secret: string };
+  /** EXP түлхүүр (exp_…) — Admin panel → EXP түлхүүр. authMn.exp.* дуудлагад ашиглана */
+  expKey: string;
   logger: boolean;
   /** Хүсэлтийн timeout (ms), default 20000 */
   timeout: number;
@@ -41,6 +44,7 @@ export const config: Config = {
   env: "prod",
   hosts: { ...HOSTS.prod },
   auth: { client_id: "", client_secret: "" },
+  expKey: "",
   logger: false,
   timeout: 20000
 };
@@ -69,6 +73,11 @@ export const setAuth = (auth: { client_id: string; client_secret: string }) => {
   authState.clear();
 };
 
+/** EXP түлхүүр (Admin panel → EXP түлхүүр дээрээс авна). authMn.exp.add-д ашиглана */
+export const setExpKey = (key: string | undefined | null) => {
+  config.expKey = (key || "").trim();
+};
+
 export const setLogger = (status: boolean) => {
   config.logger = status;
 };
@@ -91,7 +100,18 @@ export const ObjectId = (): string => {
 
 import { authState } from "./auth";
 
-export { auth, user, notification, socket, authState };
+export { auth, user, notification, socket, exp, authState };
 export * from "./types";
 
-export default { auth, user, notification, socket, setAuth, setHost, setLogger, ObjectId };
+export default {
+  auth,
+  user,
+  notification,
+  socket,
+  exp,
+  setAuth,
+  setHost,
+  setExpKey,
+  setLogger,
+  ObjectId
+};

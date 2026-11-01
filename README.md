@@ -176,7 +176,37 @@ await authMn.socket.orderStatus({ user_id, order_id: "order-123" });            
 await authMn.socket.emit([{ user_id, emit_name: "my-event", data: { any: 1 } }]);        // socket.emit
 ```
 
-## 6. Client өөрийн мэдээлэл
+## 6. EXP нэмэх (Seller Panda г.м.)
+
+Хэрэглэгчид exp олгох. client_id/secret-ээс **тусдаа EXP түлхүүр** хэрэгтэй — Admin panel →
+**EXP түлхүүр** дээр нэр (ж: `Seller Panda`) + нэг дуудлагад олгох exp-ийг admin тохируулж
+үүсгэнэ (`exp_…`, нэг удаа харагдана). Хэдэн exp нэмэгдэх нь түлхүүр дээр тогтсон — дуудагч
+тал өөрчилж чадахгүй.
+
+```ts
+import authMn, { setExpKey } from "auth-mn";
+
+setExpKey(process.env.AUTH_MN_EXP_KEY); // exp_…
+
+// user_id-ээр
+const r = await authMn.exp.add({
+  user_id: 8636569,
+  desc: "Худалдан авалт #1234",
+  ref: "order-1234" // optional — ижил ref-ээр дахин дуудахад давхар нэмэхгүй
+});
+// r.data → { user_id, exp: 10, exp_total: 1250, desc, ref, duplicate: false, ... }
+
+// эсвэл frontend-ээс ирсэн хэрэглэгчийн token-оор
+await authMn.exp.add({ token: userToken, desc: "Өдөр тутмын нэвтрэлт" });
+
+// тухайн түлхүүрээр нэмсэн лог
+const logs = await authMn.exp.logs({ user_id: 8636569, page: 1, limit: 20 });
+```
+
+Шууд HTTP: `POST https://api.auth.mn/main/v1/auth/exp/add` — `Authorization: Bearer exp_…`
+(эсвэл `x-exp-key: exp_…`), body `{ user_id | token, desc, ref? }`.
+
+## 7. Client өөрийн мэдээлэл
 
 ```ts
 import { config } from "auth-mn";

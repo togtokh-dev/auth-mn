@@ -175,6 +175,28 @@ export type UserLite = Pick<
 export type PageResult<T> = { list: T[]; total: number; page: number; limit: number };
 
 /* -----------------------------
+ * EXP
+ * ----------------------------- */
+export type ExpLog = {
+  _id: string;
+  user_id: number;
+  key_id: string;
+  key_name: string;
+  /** Нэмсэн exp */
+  exp: number;
+  /** Нэмсний дараах хэрэглэгчийн нийт exp */
+  exp_total: number;
+  desc: string;
+  ref?: string;
+  createdAt?: string;
+};
+
+export type ExpAddResult = ExpLog & {
+  /** true бол ижил ref-ээр өмнө нь нэмэгдсэн — давхар нэмээгүй */
+  duplicate: boolean;
+};
+
+/* -----------------------------
  * Notification
  * ----------------------------- */
 export type PushNotiT = {
