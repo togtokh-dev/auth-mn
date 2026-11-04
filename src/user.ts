@@ -1,5 +1,13 @@
 import { request } from "./request";
-import { PageResult, Result, UserListFilter, UserLite, UserT, VerifiedUser } from "./types";
+import {
+  PageResult,
+  Result,
+  UserBankAccount,
+  UserListFilter,
+  UserLite,
+  UserT,
+  VerifiedUser
+} from "./types";
 
 /**
  * Хэрэглэгчийн token-ийг Auth.mn сервер дээр баталгаажуулж, хэрэглэгчийн
@@ -65,6 +73,23 @@ export async function listAll(filter: UserListFilter = {}, max = 50000): Promise
   return { success: true, message: "Амжилттай", data: all, status: 200 };
 }
 
+/**
+ * Хэрэглэгчийн ДАН-аар баталгаажуулж холбосон банкны дансууд (primary эхэндээ).
+ * Мөнгө буцаан олголт, таталтын хүсэлтэд ашиглана. Permission: user.bank.read
+ *
+ *   const r = await authMn.user.bankAccounts({ user_id: 8636569 });
+ *   r.data → [{ bank_code, bank_name, account, iban, holder_name, primary, ... }]
+ */
+export const bankAccounts = (query: {
+  user_id: number | string;
+}): Promise<Result<UserBankAccount[]>> =>
+  request<UserBankAccount[]>({
+    method: "POST",
+    path: "/main/v1/auth/client/user/bank-accounts",
+    name: "user bank accounts",
+    data: query
+  });
+
 /* -----------------------------
  * Express / Koa / Fastify-д зориулсан middleware
  * ----------------------------- */
@@ -121,4 +146,4 @@ export const middleware =
     return next();
   };
 
-export default { verify, find, list, listAll, middleware };
+export default { verify, find, list, listAll, bankAccounts, middleware };

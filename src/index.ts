@@ -9,15 +9,17 @@
  * Token-ийг lib өөрөө авч, хугацаа дуусахаас өмнө refresh хийнэ.
  * Client-д олгосон permission-ээс гадуур API дуудвал 403 + message буцна.
  *
- * Хамрах хүрээ: хэрэглэгч (verify / find), мэдэгдэл (push / sms / mail),
+ * Хамрах хүрээ: хэрэглэгч (verify / find / bankAccounts), мэдэгдэл (push / sms / mail),
  * socket (toast / status / orderStatus / emit), exp (хэрэглэгчид exp нэмэх —
- * тусдаа EXP түлхүүр, setExpKey). Merchant/admin зэрэг дотоод бүртгэлүүд энэ санд байхгүй.
+ * тусдаа EXP түлхүүр, setExpKey), wallet (хэрэглэгчийн token-оор хэтэвч
+ * үүсгэх / үлдэгдэл / лог). Merchant/admin зэрэг дотоод бүртгэлүүд энэ санд байхгүй.
  */
 import auth from "./auth";
 import user from "./user";
 import notification from "./notification";
 import socket from "./socket";
 import exp from "./exp";
+import wallet from "./wallet";
 
 export type Env = "prod" | "staging";
 
@@ -100,7 +102,7 @@ export const ObjectId = (): string => {
 
 import { authState } from "./auth";
 
-export { auth, user, notification, socket, exp, authState };
+export { auth, user, notification, socket, exp, wallet, authState };
 export * from "./types";
 
 export default {
@@ -109,6 +111,7 @@ export default {
   notification,
   socket,
   exp,
+  wallet,
   setAuth,
   setHost,
   setExpKey,

@@ -253,3 +253,65 @@ export type StatusT = {
 export type OrderStatusT = { user_id: number; order_id: string; [k: string]: any };
 
 export type EmitT = { user_id: number; emit_name: string; data: any };
+
+/* -----------------------------
+ * Wallet
+ * ----------------------------- */
+
+/** GET /main/v1/wallet/balance — хэтэвч тус бүрийн үлдэгдэл */
+export type WalletBalanceItem = {
+  key_id: string;
+  name: string;
+  wallet_id: string;
+  balance: number;
+  status: string;
+  wallet_type: string;
+};
+
+/** GET /main/v1/wallet/list — апп-уудын хэтэвчний загварууд */
+export type WalletTemplate = {
+  key_id: string;
+  wallet_type: string;
+  wallet_name: string;
+  role: string[];
+};
+
+/** GET /main/v1/wallet/logs — гүйлгээний лог (wallet service-ээс sync хийгдсэн) */
+export type WalletLogItem = {
+  _id?: string;
+  group_id?: string;
+  payment_id?: string;
+  description?: string;
+  /** P2P | M2P | M2M | P2M | T2M | T2P | P2T | M2T */
+  type?: string;
+  /** NORMAL | FEE | REFUND */
+  tra_type?: string;
+  source?: string;
+  receiver?: string;
+  wallet_id?: string;
+  amount?: number;
+  createdAt?: string | Date;
+  [k: string]: unknown;
+};
+
+/* -----------------------------
+ * Банкны данс (ДАН-аар баталгаажуулж холбосон)
+ * ----------------------------- */
+export type UserBankAccount = {
+  _id: string;
+  /** Khan refNo (ж: "003" Хаан, "203" Голомт) */
+  bank_code: string;
+  bank_name: string;
+  /** Дансны дугаар (IBAN-гүй) */
+  account: string;
+  iban: string;
+  currency?: string;
+  /** Банкнаас ирсэн дансны эзний нэр */
+  holder_name: string;
+  /** ДАН-ы нэртэй таарц, 0–100 */
+  match: number;
+  primary: boolean;
+  label?: string;
+  verified_at?: string | Date | null;
+  createdAt?: string | Date;
+};
