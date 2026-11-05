@@ -1,63 +1,79 @@
 name: Publish to NPM
 
+# npm Trusted Publisher (OIDC) — NPM_TOKEN secret хэрэггүй.
+# npmjs.com → auth-mn → Settings → Trusted Publisher → GitHub Actions:
+#   Organization/user: togtokh-dev · Repository: auth-mn · Workflow filename: npm-publish.yml · Environment: (хоосон)
+# main руу push хийхэд package.json-ы version npm дээр байхгүй бол л publish хийнэ
+# (ижил version дахин publish хийхийг оролдохгүй). Гараар ч ажиллуулж болно (workflow_dispatch).
+
 on:
   push:
-    branches:
-      - main # Trigger on pushes to the main branch
+    branches: [main]
+    paths:
+      - "package.json"
+      - "src/**"
+      - "tsconfig.json"
+      - ".github/workflows/npm-publish.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # OIDC token — npm trusted publishing + provenance
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
 
 jobs:
   publish:
-    name: Publish NPM Package
+    name: Build & publish
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18 # Specify the Node.js version
+          node-version: 22
           registry-url: https://registry.npmjs.org/
+          cache: npm
 
-      - name: Check NPM Token
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Trusted publishing нь npm 11.5.1+ шаардана
+      - name: Update npm
+        run: npm install -g npm@latest && npm -v
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build-ts
+
+      - name: Check whether this version is already on npm
+        id: check
         run: |
-          if [ -z "$NPM_TOKEN" ]; then
-            echo "NPM_TOKEN is not set"
-            exit 1
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "$NAME@$VERSION already published — skipping"
           else
-            echo "NPM_TOKEN is set"
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "$NAME@$VERSION not on npm — will publish"
           fi
 
-      - name: Log Sanitized NPM Token
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "NPM_TOKEN starts with: ${NPM_TOKEN:0:5}*****"
+      - name: Publish (OIDC, provenance)
+        if: steps.check.outputs.exists == 'false'
+        run: npm publish --provenance --access public
 
-      - name: Authenticate with NPM
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-      - name: Debug .npmrc
-        run: cat ~/.npmrc
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build the package
-        run: npm run build # Replace with your build command if needed
-
-      - name: Publish the package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --loglevel verbose
-
-      - name: Cleanup
+      - name: Summary
         if: always()
         run: |
-          echo "Cleaning up sensitive files"
-          rm -f ~/.npmrc
+          echo "### auth-mn ${{ steps.check.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.check.outputs.exists }}" = "false" ]; then
+            echo "Published to npm with provenance." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Already on npm — nothing published. Bump the version in package.json to release." >> "$GITHUB_STEP_SUMMARY"
+          fi

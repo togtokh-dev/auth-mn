@@ -17,13 +17,20 @@ import {
  *   const v = await authMn.user.verify(token);
  *   if (!v.success) return res.status(401).json({ message: v.message });
  *   v.data.user.user_id ...
+ *
+ * Default-оор Auth.mn token-ийн payload-аас шууд буцаана (DB-гүй, хурдан) — мэдээлэл token-ийн
+ * хугацаа дуустал хуучирч болно. Төлбөр, данс зэрэг чухал үйлдэлд { fresh: true } өгвөл DB-ээс
+ * хамгийн сүүлийн мэдээллийг уншина.
  */
-export const verify = (token: string): Promise<Result<VerifiedUser>> =>
+export const verify = (
+  token: string,
+  opts: { fresh?: boolean } = {}
+): Promise<Result<VerifiedUser>> =>
   request<VerifiedUser>({
     method: "POST",
     path: "/main/v1/auth/client/user/verify",
     name: "user verify",
-    data: { token }
+    data: { token, fresh: !!opts.fresh }
   });
 
 /**

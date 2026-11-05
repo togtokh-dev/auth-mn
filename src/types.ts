@@ -38,6 +38,8 @@ export type VerifiedUser = {
   /** token-ийн дуусах хугацаа (unix sec) */
   exp: number | null;
   client: { client_id: string; name: string };
+  /** true бол DB-ээс шинээр уншсан, false бол token-ийн payload */
+  fresh?: boolean;
 };
 
 export type ClientInfo = {
