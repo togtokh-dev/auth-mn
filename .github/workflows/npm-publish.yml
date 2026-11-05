@@ -37,14 +37,14 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org/
-          cache: npm
+          # package-lock.json repo-д байхгүй (.gitignore) тул cache / npm ci ашиглахгүй
 
       # Trusted publishing нь npm 11.5.1+ шаардана
       - name: Update npm
         run: npm install -g npm@latest && npm -v
 
       - name: Install
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build-ts
